@@ -1,0 +1,36 @@
+{
+  "name": "temp_app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "security-test": "node scripts/security-test.js",
+    "audit": "npm audit --audit-level=moderate",
+    "type-check": "tsc --noEmit",
+    "pre-deploy": "npm run security-test && npm run build"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "@supabase/supabase-js": "^2.86.0",
+    "@types/dompurify": "^3.0.5",
+    "@types/qrcode": "^1.5.6",
+    "dompurify": "^3.3.0",
+    "next": "^16.0.7",
+    "qrcode": "^1.5.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.6",
+    "prisma": "5.22.0",
+    "typescript": "^5"
+  }
+}

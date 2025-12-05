@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  CONTADOR
+  CLIENTE
+  AUDITOR
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  role      Role     @default(CLIENTE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Password management
+  passwordChangedAt  DateTime? // Última vez que cambió la contraseña
+  passwordHistory    Json?     // Historial de últimas 5 contraseñas (encriptado)
+  backupCodes        String?   // Backup codes para MFA (encriptado)
+  mfaEnabled         Boolean   @default(false)
+  mfaSecret          String?   // TOTP secret (encriptado)
+  
+  // Relations
+  companies Company[]
+  auditLogs AuditLog[]
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  taxId     String   @unique // Encrypted
+  country   String
+  metadata  Json?    // Legal form, NRC, address, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users        User[]
+  transactions Transaction[]
+  categories   Category[]
+}
+
+enum TransactionType {
+  INGRESO
+  EGRESO
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  type      TransactionType
+  color     String   @default("#3b82f6")
+  icon      String   @default("📁")
+  companyId String
+  createdAt DateTime @default(now())
+  
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  type        TransactionType
+  amount      Float
+  description String
+  date        DateTime
+  categoryId  String
+  companyId   String
+  userId      String
+  attachments Json?           // URLs de archivos adjuntos
+  metadata    Json?           // Tax info, etc
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  
+  category Category @relation(fields: [categoryId], references: [id])
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  @@index([companyId])
+  @@index([userId])
+  @@index([date])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  timestamp   DateTime @default(now())
+  userId      String?
+  action      String
+  resource    String
+  resourceId  String?
+  ipAddress   String
+  userAgent   String
+  geoLocation Json?
+  oldData     Json?
+  newData     Json?
+  result      String
+  metadata    Json?
+  
+  user        User?    @relation(fields: [userId], references: [id])
+}
