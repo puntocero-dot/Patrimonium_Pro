@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
         // Por ahora retornar array vacío si no hay empresas
         // TODO: Implementar auth correctamente
-        const companies: any[] = [];
+        const companies: unknown[] = [];
 
         return NextResponse.json({ companies });
     } catch (error) {

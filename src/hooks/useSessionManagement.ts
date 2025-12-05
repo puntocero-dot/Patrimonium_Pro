@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SessionManager, detectConcurrentSessions } from '@/lib/auth/session-manager';
 
@@ -9,11 +9,11 @@ export function useSessionManagement(options?: {
     enableConcurrentDetection?: boolean;
 }) {
     const router = useRouter();
-    const sessionManagerRef = useRef<SessionManager | null>(null);
+    const [sessionManager, setSessionManager] = useState<SessionManager | null>(null);
 
     useEffect(() => {
         const manager = new SessionManager(options?.inactivityTimeoutMs);
-        sessionManagerRef.current = manager;
+        setSessionManager(manager);
 
         const handleSessionExpired = () => {
             router.push('/login?reason=session_expired');
@@ -31,6 +31,6 @@ export function useSessionManagement(options?: {
     }, [router, options?.inactivityTimeoutMs, options?.enableConcurrentDetection]);
 
     return {
-        sessionManager: sessionManagerRef.current,
+        sessionManager,
     };
 }

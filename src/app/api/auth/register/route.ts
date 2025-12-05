@@ -73,10 +73,11 @@ export async function POST(request: Request) {
                 user: newUser
             });
 
-        } catch (dbError: any) {
+        } catch (dbError: unknown) {
             console.error('Database creation error:', dbError);
+            const error = dbError as { code?: string };
 
-            if (dbError.code === 'P2002') {
+            if (error.code === 'P2002') {
                 return NextResponse.json(
                     { error: 'User already exists in database' },
                     { status: 409 }

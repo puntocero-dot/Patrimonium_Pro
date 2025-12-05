@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from '../prisma';
 import { logger } from '../logging/logger';
 import { maskSensitiveData } from '../encryption/crypto';
@@ -87,9 +88,9 @@ export async function createAuditLog(data: AuditLogData): Promise<void> {
                 resourceId: data.resourceId,
                 ipAddress: data.ipAddress,
                 userAgent: data.userAgent,
-                geoLocation: (data.geoLocation || null) as any,
-                oldData: maskedOldData,
-                newData: maskedNewData,
+                geoLocation: (data.geoLocation || null) as unknown as any,
+                oldData: maskedOldData as any,
+                newData: maskedNewData as any,
                 result: data.result,
                 metadata: data.metadata || null,
             },
@@ -121,10 +122,10 @@ export async function createAuditLog(data: AuditLogData): Promise<void> {
 /**
  * Enmascara campos sensibles en los datos
  */
-function maskSensitiveFields(data: any): any {
+function maskSensitiveFields(data: unknown): unknown {
     if (!data || typeof data !== 'object') return data;
 
-    const masked = { ...data };
+    const masked = { ...(data as object) } as Record<string, unknown>;
     const sensitiveFields = ['password', 'token', 'ssn', 'taxId', 'bankAccount', 'creditCard'];
 
     for (const [key, value] of Object.entries(masked)) {

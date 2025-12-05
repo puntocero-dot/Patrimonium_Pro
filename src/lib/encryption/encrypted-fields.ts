@@ -82,7 +82,7 @@ export function encryptSensitiveData(data: SensitiveData): Record<string, string
 export function decryptSensitiveData<T extends SensitiveData>(
     encryptedData: Record<string, string>
 ): T {
-    const decrypted: any = {};
+    const decrypted: Record<string, string | null> = {};
 
     for (const [key, value] of Object.entries(encryptedData)) {
         if (value) {
@@ -95,7 +95,7 @@ export function decryptSensitiveData<T extends SensitiveData>(
         }
     }
 
-    return decrypted as T;
+    return decrypted as unknown as T;
 }
 
 /**

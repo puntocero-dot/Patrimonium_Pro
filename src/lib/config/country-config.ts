@@ -215,7 +215,7 @@ export function calculateVAT(amount: number, country: Country): {
 /**
  * Guarda configuración encriptada en la base de datos
  */
-export function encryptCountrySpecificData(data: any): string {
+export function encryptCountrySpecificData(data: unknown): string {
     return encrypt(JSON.stringify(data));
 }
 

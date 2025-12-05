@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Emergency Script: Maintenance Mode
@@ -13,15 +15,15 @@ const PUBLIC_DIR = path.join(__dirname, '../../public');
 const MAINTENANCE_PAGE = path.join(PUBLIC_DIR, 'maintenance.html');
 
 function enableMaintenanceMode() {
-    // Crear archivo de flag
-    fs.writeFileSync(MAINTENANCE_FILE, JSON.stringify({
-        enabled: true,
-        enabledAt: new Date().toISOString(),
-        reason: 'Security incident - Emergency maintenance',
-    }));
+  // Crear archivo de flag
+  fs.writeFileSync(MAINTENANCE_FILE, JSON.stringify({
+    enabled: true,
+    enabledAt: new Date().toISOString(),
+    reason: 'Security incident - Emergency maintenance',
+  }));
 
-    // Crear página de mantenimiento
-    const html = `
+  // Crear página de mantenimiento
+  const html = `
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -65,27 +67,27 @@ function enableMaintenanceMode() {
 </html>
   `;
 
-    fs.writeFileSync(MAINTENANCE_PAGE, html);
+  fs.writeFileSync(MAINTENANCE_PAGE, html);
 
-    console.log('🔧 MODO MANTENIMIENTO ACTIVADO');
-    console.log('   Archivo de flag creado: .maintenance');
-    console.log('   Página de mantenimiento: public/maintenance.html');
-    console.log('\n⚠️  Actualiza tu middleware.ts para verificar el archivo .maintenance');
+  console.log('🔧 MODO MANTENIMIENTO ACTIVADO');
+  console.log('   Archivo de flag creado: .maintenance');
+  console.log('   Página de mantenimiento: public/maintenance.html');
+  console.log('\n⚠️  Actualiza tu middleware.ts para verificar el archivo .maintenance');
 }
 
 function disableMaintenanceMode() {
-    // Eliminar archivo de flag
-    if (fs.existsSync(MAINTENANCE_FILE)) {
-        fs.unlinkSync(MAINTENANCE_FILE);
-    }
+  // Eliminar archivo de flag
+  if (fs.existsSync(MAINTENANCE_FILE)) {
+    fs.unlinkSync(MAINTENANCE_FILE);
+  }
 
-    // Eliminar página de mantenimiento
-    if (fs.existsSync(MAINTENANCE_PAGE)) {
-        fs.unlinkSync(MAINTENANCE_PAGE);
-    }
+  // Eliminar página de mantenimiento
+  if (fs.existsSync(MAINTENANCE_PAGE)) {
+    fs.unlinkSync(MAINTENANCE_PAGE);
+  }
 
-    console.log('✅ MODO MANTENIMIENTO DESACTIVADO');
-    console.log('   Sistema restaurado a operación normal');
+  console.log('✅ MODO MANTENIMIENTO DESACTIVADO');
+  console.log('   Sistema restaurado a operación normal');
 }
 
 // CLI
@@ -93,7 +95,7 @@ const args = process.argv.slice(2);
 const action = args.find(arg => arg.includes('--enable') || arg.includes('--disable'));
 
 if (!action) {
-    console.log(`
+  console.log(`
 Uso:
   node emergency/maintenance-mode.js --enable
   node emergency/maintenance-mode.js --disable
@@ -102,11 +104,11 @@ Descripción:
   Activa/desactiva el modo de mantenimiento de emergencia.
   Útil durante respuesta a incidentes de seguridad.
   `);
-    process.exit(0);
+  process.exit(0);
 }
 
 if (action.includes('--enable')) {
-    enableMaintenanceMode();
+  enableMaintenanceMode();
 } else if (action.includes('--disable')) {
-    disableMaintenanceMode();
+  disableMaintenanceMode();
 }

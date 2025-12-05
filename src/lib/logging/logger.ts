@@ -16,7 +16,7 @@ export interface LogEntry {
     timestamp: Date;
     level: LogLevel;
     message: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
     userId?: string;
     ip?: string;
     action?: string;
@@ -42,7 +42,7 @@ const SENSITIVE_FIELDS = [
 /**
  * Enmascara datos sensibles en un objeto recursivamente
  */
-function maskSensitiveFields(obj: any): any {
+function maskSensitiveFields(obj: unknown): unknown {
     if (obj === null || obj === undefined) {
         return obj;
     }
@@ -56,14 +56,14 @@ function maskSensitiveFields(obj: any): any {
     }
 
     if (typeof obj === 'object') {
-        const masked: any = {};
+        const masked: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(obj)) {
             const lowerKey = key.toLowerCase();
             const isSensitive = SENSITIVE_FIELDS.some(field => lowerKey.includes(field));
 
             if (isSensitive && typeof value === 'string') {
                 masked[key] = maskSensitiveData(value, 2);
-            } else if (typeof value === 'object') {
+            } else if (typeof value === 'object' && value !== null) {
                 masked[key] = maskSensitiveFields(value);
             } else {
                 masked[key] = value;
@@ -85,12 +85,12 @@ class Logger {
         this.serviceName = serviceName;
     }
 
-    private log(level: LogLevel, message: string, metadata?: Record<string, any>): void {
+    private log(level: LogLevel, message: string, metadata?: Record<string, unknown>): void {
         const entry: LogEntry = {
             timestamp: new Date(),
             level,
             message,
-            metadata: metadata ? maskSensitiveFields(metadata) : undefined,
+            metadata: metadata ? (maskSensitiveFields(metadata) as Record<string, unknown>) : undefined,
         };
 
         // En producción, esto debería enviarse a un servicio de logging (CloudWatch, Datadog, etc.)
@@ -117,19 +117,19 @@ class Logger {
         }
     }
 
-    public debug(message: string, metadata?: Record<string, any>): void {
+    public debug(message: string, metadata?: Record<string, unknown>): void {
         this.log(LogLevel.DEBUG, message, metadata);
     }
 
-    public info(message: string, metadata?: Record<string, any>): void {
+    public info(message: string, metadata?: Record<string, unknown>): void {
         this.log(LogLevel.INFO, message, metadata);
     }
 
-    public warn(message: string, metadata?: Record<string, any>): void {
+    public warn(message: string, metadata?: Record<string, unknown>): void {
         this.log(LogLevel.WARN, message, metadata);
     }
 
-    public error(message: string, error?: Error, metadata?: Record<string, any>): void {
+    public error(message: string, error?: Error, metadata?: Record<string, unknown>): void {
         this.log(LogLevel.ERROR, message, {
             ...metadata,
             error: error ? {
@@ -143,7 +143,7 @@ class Logger {
     /**
      * Log específico para eventos de seguridad
      */
-    public security(action: string, metadata?: Record<string, any>): void {
+    public security(action: string, metadata?: Record<string, unknown>): void {
         this.log(LogLevel.SECURITY, `Security Event: ${action}`, metadata);
     }
 
@@ -174,7 +174,7 @@ class Logger {
         userId: string,
         entity: string,
         entityId: string,
-        changes: Record<string, { old: any; new: any }>
+        changes: Record<string, { old: unknown; new: unknown }>
     ): void {
         this.security('Data Modified', {
             userId: maskSensitiveData(userId, 4),
