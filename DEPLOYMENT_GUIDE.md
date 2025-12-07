@@ -99,24 +99,18 @@ npx prisma studio
 
 En Supabase Dashboard > Settings > API:
 
+### 1.2 Crear archivo vercel.json
+...
+
+### 2.4 Obtener Credenciales de Supabase
+
+En Supabase Dashboard > Settings > API:
+
 - **Project URL:** `https://xxxxx.supabase.co`
-- **anon public key:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
-- **service_role key:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (¡MUY SECRETO!)
+- **anon public key:** `[YOUR_ANON_KEY]`
+- **service_role key:** `[YOUR_SERVICE_ROLE_KEY]` (¡MUY SECRETO!)
 
----
-
-## Paso 3: Configurar Vercel
-
-### 3.1 Conectar Repositorio
-
-1. Ve a [Vercel Dashboard](https://vercel.com/dashboard)
-2. Click "Add New..." > "Project"
-3. Importa tu repositorio de Git
-4. Selecciona el framework: **Next.js**
-
-### 3.2 Configurar Environment Variables
-
-En Vercel Project Settings > Environment Variables, agregar:
+...
 
 #### Production Environment
 
@@ -127,8 +121,8 @@ DIRECT_URL="postgresql://postgres:PASSWORD@db.xxxxx.supabase.co:5432/postgres"
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL="https://xxxxx.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+NEXT_PUBLIC_SUPABASE_ANON_KEY="[YOUR_ANON_KEY]"
+SUPABASE_SERVICE_ROLE_KEY="[YOUR_SERVICE_ROLE_KEY]"
 
 # Encryption
 ENCRYPTION_MASTER_KEY="[genera-una-clave-segura-de-64-caracteres]"
