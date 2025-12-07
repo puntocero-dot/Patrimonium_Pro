@@ -46,18 +46,5 @@
                 }
             ]
         }
-    ],
-    "redirects": [
-        {
-            "source": "/",
-            "destination": "/login",
-            "permanent": false
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/health",
-            "destination": "/api/health"
-        }
     ]
 }
