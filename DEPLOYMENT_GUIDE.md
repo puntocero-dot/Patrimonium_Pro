@@ -112,6 +112,10 @@ En Supabase Dashboard > Settings > API:
 
 ...
 
+### 3.2 Configurar Environment Variables
+
+En Vercel Project Settings > Environment Variables, agregar:
+
 #### Production Environment
 
 ```env
